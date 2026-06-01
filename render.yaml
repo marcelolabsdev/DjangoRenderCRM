@@ -20,9 +20,5 @@ services:
         generateValue: true
       - key: WEB_CONCURRENCY
         value: 4
-      - key: ADMIN_USER
-        value: admin
-      - key: ADMIN_EMAIL
-        value: admin@example.com
       - key: ADMIN_PASSWORD
-        value: Admin123!
+        generateValue: true
