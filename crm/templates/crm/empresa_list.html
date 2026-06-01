@@ -3,14 +3,14 @@
 {% block title %}Empresas{% endblock %}
 
 {% block content %}
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-5);">
+<div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="page-title">Empresas</h2>
-    <a href="{% url 'empresa_create' %}" class="btn-craft btn-craft-primary">
-        <i class="bi bi-plus"></i> Nueva
+    <a href="{% url 'empresa_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Nueva Empresa
     </a>
 </div>
 
-<div class="card-craft">
+<div class="card card-craft">
     {% if empresas %}
     <table class="table-craft">
         <thead>
@@ -18,23 +18,23 @@
                 <th>Nombre</th>
                 <th>Sector</th>
                 <th>Sitio Web</th>
-                <th style="text-align:right;">Contactos</th>
-                <th style="text-align:right;">Acciones</th>
+                <th class="text-end">Contactos</th>
+                <th class="text-end">Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for empresa in empresas %}
             <tr>
-                <td style="font-weight:500;">{{ empresa.nombre }}</td>
-                <td style="color:var(--ink-secondary);">{{ empresa.sector|default:"-" }}</td>
+                <td class="fw-medium">{{ empresa.nombre }}</td>
+                <td class="text-muted">{{ empresa.sector|default:"-" }}</td>
                 <td>
                     {% if empresa.sitio_web %}
                     <a href="{{ empresa.sitio_web }}" target="_blank" style="color:var(--brand);font-size:0.8rem;text-decoration:none;">{{ empresa.sitio_web }}</a>
-                    {% else %}<span style="color:var(--ink-muted);">-</span>{% endif %}
+                    {% else %}<span class="text-muted">-</span>{% endif %}
                 </td>
-                <td style="text-align:right;color:var(--ink-secondary);font-size:0.85rem;">{{ empresa.num_contactos }}</td>
-                <td style="text-align:right;">
-                    <a href="{% url 'empresa_edit' empresa.pk %}" class="btn-craft btn-craft-outline btn-craft-sm">
+                <td class="text-end text-muted" style="font-size:0.85rem;">{{ empresa.num_contactos }}</td>
+                <td class="text-end">
+                    <a href="{% url 'empresa_edit' empresa.pk %}" class="btn btn-sm btn-outline-secondary">
                         <i class="bi bi-pencil"></i>
                     </a>
                 </td>

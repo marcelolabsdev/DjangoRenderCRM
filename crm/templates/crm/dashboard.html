@@ -3,123 +3,134 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<h2 class="page-title" style="margin-bottom:var(--space-6);">Dashboard</h2>
+<h2 class="page-title mb-4">Dashboard</h2>
 
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--space-4);margin-bottom:var(--space-6);">
-    <div class="metric-card">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-            <div>
-                <div class="metric-label">Total Contactos</div>
-                <div class="metric-value">{{ total_contactos }}</div>
-            </div>
-            <div class="metric-icon" style="background:var(--brand-soft);color:var(--brand);">
-                <i class="bi bi-people-fill"></i>
-            </div>
-        </div>
-    </div>
-    <div class="metric-card">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-            <div>
-                <div class="metric-label">Activos</div>
-                <div class="metric-value">{{ contactos_activos }}</div>
-            </div>
-            <div class="metric-icon" style="background:var(--success-soft);color:var(--success);">
-                <i class="bi bi-person-check-fill"></i>
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <div class="metric-label">Total Contactos</div>
+                    <div class="metric-value">{{ total_contactos }}</div>
+                </div>
+                <div class="metric-icon" style="background:var(--brand-soft);color:var(--brand);">
+                    <i class="bi bi-people-fill"></i>
+                </div>
             </div>
         </div>
     </div>
-    <div class="metric-card">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-            <div>
-                <div class="metric-label">Pipeline</div>
-                <div class="metric-value">${{ valor_pipeline|floatformat:0 }}</div>
-            </div>
-            <div class="metric-icon" style="background:var(--warning-soft);color:var(--warning);">
-                <i class="bi bi-cash-stack"></i>
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <div class="metric-label">Activos</div>
+                    <div class="metric-value">{{ contactos_activos }}</div>
+                </div>
+                <div class="metric-icon" style="background:var(--success-soft);color:var(--success);">
+                    <i class="bi bi-person-check-fill"></i>
+                </div>
             </div>
         </div>
     </div>
-    <div class="metric-card">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-            <div>
-                <div class="metric-label">Ganado</div>
-                <div class="metric-value">${{ ganado|floatformat:0 }}</div>
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <div class="metric-label">Pipeline</div>
+                    <div class="metric-value">${{ valor_pipeline|floatformat:0 }}</div>
+                </div>
+                <div class="metric-icon" style="background:var(--warning-soft);color:var(--warning);">
+                    <i class="bi bi-cash-stack"></i>
+                </div>
             </div>
-            <div class="metric-icon" style="background:var(--info-soft);color:var(--info);">
-                <i class="bi bi-trophy-fill"></i>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="metric-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <div class="metric-label">Ganado</div>
+                    <div class="metric-value">${{ ganado|floatformat:0 }}</div>
+                </div>
+                <div class="metric-icon" style="background:var(--info-soft);color:var(--info);">
+                    <i class="bi bi-trophy-fill"></i>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-5);">
-    <div class="card-craft">
-        <div class="card-header-craft">
-            <h5>Oportunidades Recientes</h5>
-        </div>
-        {% if oportunidades_recientes %}
-        <table class="table-craft">
-            <thead>
-                <tr>
-                    <th>Titulo</th>
-                    <th>Contacto</th>
-                    <th>Etapa</th>
-                    <th style="text-align:right;">Valor</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for opp in oportunidades_recientes %}
-                <tr>
-                    <td style="font-weight:500;">{{ opp.titulo }}</td>
-                    <td style="color:var(--ink-secondary);">{{ opp.contacto.nombre }}</td>
-                    <td>
-                        <span class="badge-craft
-                            {% if opp.etapa == 'prospecto' %}badge-craft-neutral
-                            {% elif opp.etapa == 'cualificado' %}badge-craft-info
-                            {% elif opp.etapa == 'propuesta' %}badge-craft-warning
-                            {% elif opp.etapa == 'cerrado_ganado' %}badge-craft-success
-                            {% elif opp.etapa == 'cerrado_perdido' %}badge-craft-danger
-                            {% endif %}">
-                            {{ opp.get_etapa_display }}
-                        </span>
-                    </td>
-                    <td style="text-align:right;font-family:var(--font-mono);font-size:0.8rem;">${{ opp.valor|floatformat:0 }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <div class="empty-state">Sin oportunidades registradas.</div>
-        {% endif %}
-    </div>
-
-    <div class="card-craft">
-        <div class="card-header-craft">
-            <h5>Actividades Recientes</h5>
-        </div>
-        <div style="padding:var(--space-3) var(--space-4);">
-            {% if actividades_recientes %}
-            {% for act in actividades_recientes %}
-            <div class="activity-item">
-                <div style="display:flex;gap:var(--space-3);align-items:flex-start;">
-                    <div class="activity-icon">
-                        <i class="bi
-                            {% if act.tipo == 'llamada' %}bi-telephone
-                            {% elif act.tipo == 'email' %}bi-envelope
-                            {% elif act.tipo == 'reunion' %}bi-calendar-event
-                            {% else %}bi-journal-text{% endif %}"></i>
-                    </div>
-                    <div>
-                        <div style="font-size:0.85rem;font-weight:500;color:var(--ink);">{{ act.contacto.nombre }}</div>
-                        <div style="font-size:0.8rem;color:var(--ink-tertiary);margin-top:2px;">{{ act.descripcion|truncatewords:6 }}</div>
-                    </div>
-                </div>
-                <div style="font-size:0.7rem;color:var(--ink-muted);white-space:nowrap;">{{ act.fecha|date:"d M" }}</div>
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card card-craft">
+            <div class="card-header-craft">
+                <h5>Oportunidades Recientes</h5>
             </div>
-            {% endfor %}
+            {% if oportunidades_recientes %}
+            <table class="table-craft">
+                <thead>
+                    <tr>
+                        <th>Titulo</th>
+                        <th>Contacto</th>
+                        <th>Etapa</th>
+                        <th class="text-end">Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for opp in oportunidades_recientes %}
+                    <tr>
+                        <td class="fw-medium">{{ opp.titulo }}</td>
+                        <td class="text-muted">{{ opp.contacto.nombre }}</td>
+                        <td>
+                            <span class="badge-craft
+                                {% if opp.etapa == 'prospecto' %}badge-craft-neutral
+                                {% elif opp.etapa == 'cualificado' %}badge-craft-info
+                                {% elif opp.etapa == 'propuesta' %}badge-craft-warning
+                                {% elif opp.etapa == 'cerrado_ganado' %}badge-craft-success
+                                elif opp.etapa == 'cerrado_perdido' %}badge-craft-danger
+                                {% endif %}">
+                                {{ opp.get_etapa_display }}
+                            </span>
+                        </td>
+                        <td class="text-end font-monospace" style="font-size:0.8rem;">${{ opp.valor|floatformat:0 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             {% else %}
-            <div class="empty-state">Sin actividades registradas.</div>
+            <div class="empty-state">Sin oportunidades registradas.</div>
             {% endif %}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card card-craft">
+            <div class="card-header-craft">
+                <h5>Actividades Recientes</h5>
+            </div>
+            <div class="p-3">
+                {% if actividades_recientes %}
+                {% for act in actividades_recientes %}
+                <div class="activity-item d-flex justify-content-between align-items-start gap-2">
+                    <div class="d-flex gap-2 align-items-start">
+                        <div class="activity-icon">
+                            <i class="bi
+                                {% if act.tipo == 'llamada' %}bi-telephone
+                                {% elif act.tipo == 'email' %}bi-envelope
+                                {% elif act.tipo == 'reunion' %}bi-calendar-event
+                                {% else %}bi-journal-text{% endif %}"></i>
+                        </div>
+                        <div>
+                            <div class="fw-medium" style="font-size:0.85rem;">{{ act.contacto.nombre }}</div>
+                            <div class="text-muted" style="font-size:0.8rem;">{{ act.descripcion|truncatewords:6 }}</div>
+                        </div>
+                    </div>
+                    <small class="text-muted" style="white-space:nowrap;">{{ act.fecha|date:"d M" }}</small>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="empty-state">Sin actividades registradas.</div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>

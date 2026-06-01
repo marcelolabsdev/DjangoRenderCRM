@@ -3,28 +3,37 @@
 {% block title %}Contactos{% endblock %}
 
 {% block content %}
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-5);">
+<div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="page-title">Contactos</h2>
-    <a href="{% url 'contacto_create' %}" class="btn-craft btn-craft-primary">
-        <i class="bi bi-plus"></i> Nuevo
+    <a href="{% url 'contacto_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Nuevo Contacto
     </a>
 </div>
 
-<div class="card-craft">
-    <div class="filter-bar">
-        <form method="get" style="display:flex;gap:var(--space-2);flex:1;">
-            <input type="text" name="q" placeholder="Buscar por nombre o email..." value="{{ buscar|default:'' }}" style="max-width:280px;">
-            <select name="estado">
-                <option value="">Todos</option>
-                <option value="activo" {% if estado_actual == 'activo' %}selected{% endif %}>Activo</option>
-                <option value="inactivo" {% if estado_actual == 'inactivo' %}selected{% endif %}>Inactivo</option>
-                <option value="lead" {% if estado_actual == 'lead' %}selected{% endif %}>Lead</option>
-            </select>
-            <button type="submit" class="btn-craft btn-craft-outline btn-craft-sm">
-                <i class="bi bi-search"></i>
-            </button>
+<div class="card card-craft mb-3">
+    <div class="card-body py-2 px-3">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-md-4">
+                <input type="text" name="q" class="form-control form-control-sm" placeholder="Buscar por nombre o email..." value="{{ buscar|default:'' }}">
+            </div>
+            <div class="col-md-3">
+                <select name="estado" class="form-select form-select-sm">
+                    <option value="">Todos los estados</option>
+                    <option value="activo" {% if estado_actual == 'activo' %}selected{% endif %}>Activo</option>
+                    <option value="inactivo" {% if estado_actual == 'inactivo' %}selected{% endif %}>Inactivo</option>
+                    <option value="lead" {% if estado_actual == 'lead' %}selected{% endif %}>Lead</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-secondary btn-sm w-100">
+                    <i class="bi bi-search"></i> Filtrar
+                </button>
+            </div>
         </form>
     </div>
+</div>
+
+<div class="card card-craft">
     {% if contactos %}
     <table class="table-craft">
         <thead>
@@ -35,16 +44,16 @@
                 <th>Empresa</th>
                 <th>Estado</th>
                 <th>Fecha</th>
-                <th style="text-align:right;">Acciones</th>
+                <th class="text-end">Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for contacto in contactos %}
             <tr>
-                <td><a href="{% url 'contacto_detail' contacto.pk %}" style="color:var(--ink);font-weight:500;text-decoration:none;">{{ contacto.nombre }}</a></td>
-                <td style="color:var(--ink-secondary);">{{ contacto.email }}</td>
-                <td style="color:var(--ink-secondary);">{{ contacto.telefono|default:"-" }}</td>
-                <td style="color:var(--ink-secondary);">{{ contacto.empresa|default:"-" }}</td>
+                <td><a href="{% url 'contacto_detail' contacto.pk %}" class="text-decoration-none fw-medium" style="color:var(--ink);">{{ contacto.nombre }}</a></td>
+                <td class="text-muted">{{ contacto.email }}</td>
+                <td class="text-muted">{{ contacto.telefono|default:"-" }}</td>
+                <td class="text-muted">{{ contacto.empresa|default:"-" }}</td>
                 <td>
                     <span class="badge-craft
                         {% if contacto.estado == 'activo' %}badge-craft-success
@@ -53,12 +62,12 @@
                         {{ contacto.get_estado_display }}
                     </span>
                 </td>
-                <td style="color:var(--ink-tertiary);font-size:0.8rem;">{{ contacto.fecha_creacion|date:"d M Y" }}</td>
-                <td style="text-align:right;">
-                    <a href="{% url 'contacto_edit' contacto.pk %}" class="btn-craft btn-craft-outline btn-craft-sm" title="Editar">
+                <td class="text-muted" style="font-size:0.8rem;">{{ contacto.fecha_creacion|date:"d M Y" }}</td>
+                <td class="text-end">
+                    <a href="{% url 'contacto_edit' contacto.pk %}" class="btn btn-sm btn-outline-secondary" title="Editar">
                         <i class="bi bi-pencil"></i>
                     </a>
-                    <a href="{% url 'contacto_delete' contacto.pk %}" class="btn-craft btn-craft-danger btn-craft-sm" title="Eliminar">
+                    <a href="{% url 'contacto_delete' contacto.pk %}" class="btn btn-sm btn-outline-danger" title="Eliminar">
                         <i class="bi bi-trash"></i>
                     </a>
                 </td>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}CRM{% endblock %} | CRM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,63 +12,54 @@
     <link href="/static/css/style.css" rel="stylesheet">
 </head>
 <body>
-    <div id="wrapper">
+    <div class="d-flex" id="wrapper">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h5>
+                <div class="sidebar-brand">
                     <span class="sidebar-brand-icon"><i class="bi bi-bar-chart-fill"></i></span>
-                    CRM
-                </h5>
+                    <span class="sidebar-brand-text">CRM</span>
+                </div>
             </div>
-            <nav>
-                <ul class="nav flex-column" style="list-style:none;padding:0;margin:0;">
-                    <li>
-                        <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-                            <i class="bi bi-grid-1x2"></i> Dashboard
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'contacto_list' %}" class="nav-link {% if 'contacto' in request.resolver_match.url_name %}active{% endif %}">
-                            <i class="bi bi-person"></i> Contactos
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'oportunidad_list' %}" class="nav-link {% if 'oportunidad' in request.resolver_match.url_name %}active{% endif %}">
-                            <i class="bi bi-graph-up-arrow"></i> Oportunidades
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'empresa_list' %}" class="nav-link {% if 'empresa' in request.resolver_match.url_name %}active{% endif %}">
-                            <i class="bi bi-building"></i> Empresas
-                        </a>
-                    </li>
-                </ul>
+            <nav class="sidebar-nav">
+                <a href="{% url 'dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <i class="bi bi-grid-1x2"></i> Dashboard
+                </a>
+                <a href="{% url 'contacto_list' %}" class="sidebar-link {% if 'contacto' in request.resolver_match.url_name %}active{% endif %}">
+                    <i class="bi bi-person"></i> Contactos
+                </a>
+                <a href="{% url 'oportunidad_list' %}" class="sidebar-link {% if 'oportunidad' in request.resolver_match.url_name %}active{% endif %}">
+                    <i class="bi bi-graph-up-arrow"></i> Oportunidades
+                </a>
+                <a href="{% url 'empresa_list' %}" class="sidebar-link {% if 'empresa' in request.resolver_match.url_name %}active{% endif %}">
+                    <i class="bi bi-building"></i> Empresas
+                </a>
             </nav>
             <div class="sidebar-footer">
-                <div class="user-name">{{ user.get_full_name|default:user.username }}</div>
-                <a href="{% url 'logout' %}" class="logout-link">
+                <div class="sidebar-user">{{ user.get_full_name|default:user.username }}</div>
+                <a href="{% url 'logout' %}" class="sidebar-logout">
                     <i class="bi bi-box-arrow-right"></i> Cerrar sesion
                 </a>
             </div>
         </aside>
 
-        <div id="main-content">
-            <div class="topbar">
-                <button class="btn-craft btn-craft-outline btn-craft-sm d-md-none" id="menu-toggle">
+        <div class="flex-grow-1" id="main-content">
+            <nav class="topbar">
+                <button class="btn btn-sm btn-outline-secondary d-md-none" id="menu-toggle">
                     <i class="bi bi-list"></i>
                 </button>
                 <div></div>
-                <div class="user-context">
-                    <i class="bi bi-circle-fill" style="font-size:6px;color:var(--success);"></i>
+                <div class="topbar-user">
+                    <span class="topbar-dot"></span>
                     {{ user.username }}
                 </div>
-            </div>
+            </nav>
 
-            <div class="page-content">
+            <div class="container-fluid p-4">
                 {% if messages %}
                 {% for message in messages %}
-                <div class="alert" style="padding:var(--space-3) var(--space-4);border-radius:var(--radius-md);margin-bottom:var(--space-4);font-size:0.85rem;border:1px solid {% if message.tags == 'success' %}var(--success){% elif message.tags == 'error' %}var(--danger){% elif message.tags == 'warning' %}var(--warning){% else %}var(--info){% endif %};background:{% if message.tags == 'success' %}var(--success-soft){% elif message.tags == 'error' %}var(--danger-soft){% elif message.tags == 'warning' %}var(--warning-soft){% else %}var(--info-soft){% endif %};color:{% if message.tags == 'success' %}var(--success){% elif message.tags == 'error' %}var(--danger){% elif message.tags == 'warning' %}var(--warning){% else %}var(--info){% endif %};">
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                     {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
                 {% endfor %}
                 {% endif %}
@@ -77,6 +69,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.getElementById('menu-toggle')?.addEventListener('click', function() {
             document.querySelector('.sidebar').classList.toggle('show');

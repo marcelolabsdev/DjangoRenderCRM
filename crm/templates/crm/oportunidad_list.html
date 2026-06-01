@@ -3,29 +3,36 @@
 {% block title %}Oportunidades{% endblock %}
 
 {% block content %}
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-5);">
+<div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="page-title">Oportunidades</h2>
-    <a href="{% url 'oportunidad_create' %}" class="btn-craft btn-craft-primary">
-        <i class="bi bi-plus"></i> Nueva
+    <a href="{% url 'oportunidad_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Nueva Oportunidad
     </a>
 </div>
 
-<div class="card-craft">
-    <div class="filter-bar">
-        <form method="get" style="display:flex;gap:var(--space-2);">
-            <select name="etapa">
-                <option value="">Todas las etapas</option>
-                <option value="prospecto" {% if etapa_actual == 'prospecto' %}selected{% endif %}>Prospecto</option>
-                <option value="cualificado" {% if etapa_actual == 'cualificado' %}selected{% endif %}>Cualificado</option>
-                <option value="propuesta" {% if etapa_actual == 'propuesta' %}selected{% endif %}>Propuesta</option>
-                <option value="cerrado_ganado" {% if etapa_actual == 'cerrado_ganado' %}selected{% endif %}>Cerrado Ganado</option>
-                <option value="cerrado_perdido" {% if etapa_actual == 'cerrado_perdido' %}selected{% endif %}>Cerrado Perdido</option>
-            </select>
-            <button type="submit" class="btn-craft btn-craft-outline btn-craft-sm">
-                <i class="bi bi-search"></i>
-            </button>
+<div class="card card-craft mb-3">
+    <div class="card-body py-2 px-3">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-md-3">
+                <select name="etapa" class="form-select form-select-sm">
+                    <option value="">Todas las etapas</option>
+                    <option value="prospecto" {% if etapa_actual == 'prospecto' %}selected{% endif %}>Prospecto</option>
+                    <option value="cualificado" {% if etapa_actual == 'cualificado' %}selected{% endif %}>Cualificado</option>
+                    <option value="propuesta" {% if etapa_actual == 'propuesta' %}selected{% endif %}>Propuesta</option>
+                    <option value="cerrado_ganado" {% if etapa_actual == 'cerrado_ganado' %}selected{% endif %}>Cerrado Ganado</option>
+                    <option value="cerrado_perdido" {% if etapa_actual == 'cerrado_perdido' %}selected{% endif %}>Cerrado Perdido</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-secondary btn-sm w-100">
+                    <i class="bi bi-search"></i> Filtrar
+                </button>
+            </div>
         </form>
     </div>
+</div>
+
+<div class="card card-craft">
     {% if oportunidades %}
     <table class="table-craft">
         <thead>
@@ -34,17 +41,17 @@
                 <th>Contacto</th>
                 <th>Empresa</th>
                 <th>Etapa</th>
-                <th style="text-align:right;">Valor</th>
+                <th class="text-end">Valor</th>
                 <th>Cierre</th>
-                <th style="text-align:right;">Acciones</th>
+                <th class="text-end">Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for opp in oportunidades %}
             <tr>
-                <td style="font-weight:500;">{{ opp.titulo }}</td>
-                <td style="color:var(--ink-secondary);">{{ opp.contacto.nombre }}</td>
-                <td style="color:var(--ink-secondary);">{{ opp.empresa|default:"-" }}</td>
+                <td class="fw-medium">{{ opp.titulo }}</td>
+                <td class="text-muted">{{ opp.contacto.nombre }}</td>
+                <td class="text-muted">{{ opp.empresa|default:"-" }}</td>
                 <td>
                     <span class="badge-craft
                         {% if opp.etapa == 'cerrado_ganado' %}badge-craft-success
@@ -55,10 +62,10 @@
                         {{ opp.get_etapa_display }}
                     </span>
                 </td>
-                <td style="text-align:right;font-family:var(--font-mono);font-size:0.8rem;">${{ opp.valor|floatformat:0 }}</td>
-                <td style="color:var(--ink-tertiary);font-size:0.8rem;">{{ opp.fecha_cierre_estimada|default:"-" }}</td>
-                <td style="text-align:right;">
-                    <a href="{% url 'oportunidad_edit' opp.pk %}" class="btn-craft btn-craft-outline btn-craft-sm">
+                <td class="text-end font-monospace" style="font-size:0.8rem;">${{ opp.valor|floatformat:0 }}</td>
+                <td class="text-muted" style="font-size:0.8rem;">{{ opp.fecha_cierre_estimada|default:"-" }}</td>
+                <td class="text-end">
+                    <a href="{% url 'oportunidad_edit' opp.pk %}" class="btn btn-sm btn-outline-secondary">
                         <i class="bi bi-pencil"></i>
                     </a>
                 </td>
