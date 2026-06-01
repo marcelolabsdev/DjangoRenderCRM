@@ -3,49 +3,47 @@
 {% block title %}Empresas{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0">Empresas</h2>
-    <a href="{% url 'empresa_create' %}" class="btn btn-primary">
-        <i class="bi bi-plus-lg"></i> Nueva Empresa
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-5);">
+    <h2 class="page-title">Empresas</h2>
+    <a href="{% url 'empresa_create' %}" class="btn-craft btn-craft-primary">
+        <i class="bi bi-plus"></i> Nueva
     </a>
 </div>
 
-<div class="card border-0 shadow-sm">
-    <div class="table-responsive">
-        <table class="table table-hover mb-0">
-            <thead class="table-light">
-                <tr>
-                    <th>Nombre</th>
-                    <th>Sector</th>
-                    <th>Sitio Web</th>
-                    <th>Contactos</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for empresa in empresas %}
-                <tr>
-                    <td>{{ empresa.nombre }}</td>
-                    <td>{{ empresa.sector|default:"-" }}</td>
-                    <td>
-                        {% if empresa.sitio_web %}
-                        <a href="{{ empresa.sitio_web }}" target="_blank">{{ empresa.sitio_web }}</a>
-                        {% else %}-{% endif %}
-                    </td>
-                    <td>{{ empresa.num_contactos }}</td>
-                    <td>
-                        <a href="{% url 'empresa_edit' empresa.pk %}" class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center text-muted py-4">No hay empresas registradas.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+<div class="card-craft">
+    {% if empresas %}
+    <table class="table-craft">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Sector</th>
+                <th>Sitio Web</th>
+                <th style="text-align:right;">Contactos</th>
+                <th style="text-align:right;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for empresa in empresas %}
+            <tr>
+                <td style="font-weight:500;">{{ empresa.nombre }}</td>
+                <td style="color:var(--ink-secondary);">{{ empresa.sector|default:"-" }}</td>
+                <td>
+                    {% if empresa.sitio_web %}
+                    <a href="{{ empresa.sitio_web }}" target="_blank" style="color:var(--brand);font-size:0.8rem;text-decoration:none;">{{ empresa.sitio_web }}</a>
+                    {% else %}<span style="color:var(--ink-muted);">-</span>{% endif %}
+                </td>
+                <td style="text-align:right;color:var(--ink-secondary);font-size:0.85rem;">{{ empresa.num_contactos }}</td>
+                <td style="text-align:right;">
+                    <a href="{% url 'empresa_edit' empresa.pk %}" class="btn-craft btn-craft-outline btn-craft-sm">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">No hay empresas registradas.</div>
+    {% endif %}
 </div>
 {% endblock %}

@@ -3,82 +3,71 @@
 {% block title %}Oportunidades{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0">Oportunidades</h2>
-    <a href="{% url 'oportunidad_create' %}" class="btn btn-primary">
-        <i class="bi bi-plus-lg"></i> Nueva Oportunidad
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-5);">
+    <h2 class="page-title">Oportunidades</h2>
+    <a href="{% url 'oportunidad_create' %}" class="btn-craft btn-craft-primary">
+        <i class="bi bi-plus"></i> Nueva
     </a>
 </div>
 
-<div class="card border-0 shadow-sm mb-4">
-    <div class="card-body">
-        <form method="get">
-            <div class="row g-2">
-                <div class="col-md-3">
-                    <select name="etapa" class="form-select">
-                        <option value="">Todas las etapas</option>
-                        <option value="prospecto" {% if etapa_actual == 'prospecto' %}selected{% endif %}>Prospecto</option>
-                        <option value="cualificado" {% if etapa_actual == 'cualificado' %}selected{% endif %}>Cualificado</option>
-                        <option value="propuesta" {% if etapa_actual == 'propuesta' %}selected{% endif %}>Propuesta</option>
-                        <option value="cerrado_ganado" {% if etapa_actual == 'cerrado_ganado' %}selected{% endif %}>Cerrado Ganado</option>
-                        <option value="cerrado_perdido" {% if etapa_actual == 'cerrado_perdido' %}selected{% endif %}>Cerrado Perdido</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-outline-primary w-100">
-                        <i class="bi bi-search"></i> Filtrar
-                    </button>
-                </div>
-            </div>
+<div class="card-craft">
+    <div class="filter-bar">
+        <form method="get" style="display:flex;gap:var(--space-2);">
+            <select name="etapa">
+                <option value="">Todas las etapas</option>
+                <option value="prospecto" {% if etapa_actual == 'prospecto' %}selected{% endif %}>Prospecto</option>
+                <option value="cualificado" {% if etapa_actual == 'cualificado' %}selected{% endif %}>Cualificado</option>
+                <option value="propuesta" {% if etapa_actual == 'propuesta' %}selected{% endif %}>Propuesta</option>
+                <option value="cerrado_ganado" {% if etapa_actual == 'cerrado_ganado' %}selected{% endif %}>Cerrado Ganado</option>
+                <option value="cerrado_perdido" {% if etapa_actual == 'cerrado_perdido' %}selected{% endif %}>Cerrado Perdido</option>
+            </select>
+            <button type="submit" class="btn-craft btn-craft-outline btn-craft-sm">
+                <i class="bi bi-search"></i>
+            </button>
         </form>
     </div>
-</div>
-
-<div class="card border-0 shadow-sm">
-    <div class="table-responsive">
-        <table class="table table-hover mb-0">
-            <thead class="table-light">
-                <tr>
-                    <th>Titulo</th>
-                    <th>Contacto</th>
-                    <th>Empresa</th>
-                    <th>Etapa</th>
-                    <th>Valor</th>
-                    <th>Cierre Est.</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for opp in oportunidades %}
-                <tr>
-                    <td>{{ opp.titulo }}</td>
-                    <td>{{ opp.contacto.nombre }}</td>
-                    <td>{{ opp.empresa|default:"-" }}</td>
-                    <td>
-                        <span class="badge
-                            {% if opp.etapa == 'cerrado_ganado' %}bg-success
-                            {% elif opp.etapa == 'cerrado_perdido' %}bg-danger
-                            {% elif opp.etapa == 'propuesta' %}bg-warning
-                            {% elif opp.etapa == 'cualificado' %}bg-info
-                            {% else %}bg-secondary{% endif %}">
-                            {{ opp.get_etapa_display }}
-                        </span>
-                    </td>
-                    <td>${{ opp.valor|floatformat:0 }}</td>
-                    <td>{{ opp.fecha_cierre_estimada|default:"-" }}</td>
-                    <td>
-                        <a href="{% url 'oportunidad_edit' opp.pk %}" class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="7" class="text-center text-muted py-4">No hay oportunidades registradas.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    {% if oportunidades %}
+    <table class="table-craft">
+        <thead>
+            <tr>
+                <th>Titulo</th>
+                <th>Contacto</th>
+                <th>Empresa</th>
+                <th>Etapa</th>
+                <th style="text-align:right;">Valor</th>
+                <th>Cierre</th>
+                <th style="text-align:right;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for opp in oportunidades %}
+            <tr>
+                <td style="font-weight:500;">{{ opp.titulo }}</td>
+                <td style="color:var(--ink-secondary);">{{ opp.contacto.nombre }}</td>
+                <td style="color:var(--ink-secondary);">{{ opp.empresa|default:"-" }}</td>
+                <td>
+                    <span class="badge-craft
+                        {% if opp.etapa == 'cerrado_ganado' %}badge-craft-success
+                        {% elif opp.etapa == 'cerrado_perdido' %}badge-craft-danger
+                        {% elif opp.etapa == 'propuesta' %}badge-craft-warning
+                        {% elif opp.etapa == 'cualificado' %}badge-craft-info
+                        {% else %}badge-craft-neutral{% endif %}">
+                        {{ opp.get_etapa_display }}
+                    </span>
+                </td>
+                <td style="text-align:right;font-family:var(--font-mono);font-size:0.8rem;">${{ opp.valor|floatformat:0 }}</td>
+                <td style="color:var(--ink-tertiary);font-size:0.8rem;">{{ opp.fecha_cierre_estimada|default:"-" }}</td>
+                <td style="text-align:right;">
+                    <a href="{% url 'oportunidad_edit' opp.pk %}" class="btn-craft btn-craft-outline btn-craft-sm">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">No hay oportunidades registradas.</div>
+    {% endif %}
 </div>
 {% endblock %}

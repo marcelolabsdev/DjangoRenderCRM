@@ -3,128 +3,123 @@
 {% block title %}{{ contacto.nombre }}{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <a href="{% url 'contacto_list' %}" class="text-muted small"><i class="bi bi-arrow-left"></i> Volver a contactos</a>
-        <h2 class="mt-1 mb-0">{{ contacto.nombre }}</h2>
-    </div>
-    <div>
-        <a href="{% url 'contacto_edit' contacto.pk %}" class="btn btn-outline-primary">
+<div style="margin-bottom:var(--space-5);">
+    <a href="{% url 'contacto_list' %}" style="font-size:0.8rem;color:var(--ink-tertiary);text-decoration:none;display:inline-flex;align-items:center;gap:var(--space-1);">
+        <i class="bi bi-arrow-left"></i> Contactos
+    </a>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:var(--space-2);">
+        <h2 class="page-title">{{ contacto.nombre }}</h2>
+        <a href="{% url 'contacto_edit' contacto.pk %}" class="btn-craft btn-craft-outline">
             <i class="bi bi-pencil"></i> Editar
         </a>
     </div>
 </div>
 
-<div class="row g-4">
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Informacion</h5>
-                <hr>
-                <p><i class="bi bi-envelope me-2"></i> {{ contacto.email }}</p>
-                <p><i class="bi bi-telephone me-2"></i> {{ contacto.telefono|default:"No especificado" }}</p>
-                <p><i class="bi bi-building me-2"></i> {{ contacto.empresa|default:"Sin empresa" }}</p>
-                <p>
-                    <i class="bi bi-tag me-2"></i>
-                    <span class="badge
-                        {% if contacto.estado == 'activo' %}bg-success
-                        {% elif contacto.estado == 'inactivo' %}bg-secondary
-                        {% else %}bg-warning text-dark{% endif %}">
-                        {{ contacto.get_estado_display }}
-                    </span>
-                </p>
-                {% if contacto.notas %}
-                <hr>
-                <p class="text-muted"><i class="bi bi-journal-text me-2"></i> {{ contacto.notas }}</p>
-                {% endif %}
-            </div>
+<div style="display:grid;grid-template-columns:320px 1fr;gap:var(--space-5);">
+    <div class="card-craft" style="padding:var(--space-5);">
+        <h4 style="font-size:0.8rem;font-weight:600;color:var(--ink-tertiary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--space-4);">Informacion</h4>
+        <div style="margin-bottom:var(--space-4);">
+            <div style="font-size:0.75rem;color:var(--ink-muted);margin-bottom:2px;">Email</div>
+            <div style="font-size:0.875rem;color:var(--ink);">{{ contacto.email }}</div>
         </div>
+        <div style="margin-bottom:var(--space-4);">
+            <div style="font-size:0.75rem;color:var(--ink-muted);margin-bottom:2px;">Telefono</div>
+            <div style="font-size:0.875rem;color:var(--ink);">{{ contacto.telefono|default:"No especificado" }}</div>
+        </div>
+        <div style="margin-bottom:var(--space-4);">
+            <div style="font-size:0.75rem;color:var(--ink-muted);margin-bottom:2px;">Empresa</div>
+            <div style="font-size:0.875rem;color:var(--ink);">{{ contacto.empresa|default:"Sin empresa" }}</div>
+        </div>
+        <div style="margin-bottom:var(--space-4);">
+            <div style="font-size:0.75rem;color:var(--ink-muted);margin-bottom:2px;">Estado</div>
+            <span class="badge-craft
+                {% if contacto.estado == 'activo' %}badge-craft-success
+                {% elif contacto.estado == 'inactivo' %}badge-craft-neutral
+                {% else %}badge-craft-warning{% endif %}">
+                {{ contacto.get_estado_display }}
+            </span>
+        </div>
+        {% if contacto.notas %}
+        <div style="border-top:1px solid var(--border-subtle);padding-top:var(--space-4);margin-top:var(--space-4);">
+            <div style="font-size:0.75rem;color:var(--ink-muted);margin-bottom:4px;">Notas</div>
+            <div style="font-size:0.85rem;color:var(--ink-secondary);line-height:1.6;">{{ contacto.notas }}</div>
+        </div>
+        {% endif %}
     </div>
-    <div class="col-md-8">
-        <div class="card border-0 shadow-sm mb-4">
-            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Oportunidades</h5>
-                <a href="{% url 'oportunidad_create' %}" class="btn btn-sm btn-outline-primary">
+
+    <div style="display:flex;flex-direction:column;gap:var(--space-5);">
+        <div class="card-craft">
+            <div class="card-header-craft">
+                <h5>Oportunidades</h5>
+                <a href="{% url 'oportunidad_create' %}" class="btn-craft btn-craft-primary btn-craft-sm">
                     <i class="bi bi-plus"></i> Agregar
                 </a>
             </div>
-            <div class="card-body p-0">
-                {% if oportunidades %}
-                <table class="table table-hover mb-0">
-                    <thead class="table-light">
-                        <tr><th>Titulo</th><th>Etapa</th><th>Valor</th><th>Cierre Est.</th></tr>
-                    </thead>
-                    <tbody>
-                        {% for opp in oportunidades %}
-                        <tr>
-                            <td>{{ opp.titulo }}</td>
-                            <td>
-                                <span class="badge
-                                    {% if opp.etapa == 'cerrado_ganado' %}bg-success
-                                    {% elif opp.etapa == 'cerrado_perdido' %}bg-danger
-                                    {% elif opp.etapa == 'propuesta' %}bg-warning
-                                    {% elif opp.etapa == 'cualificado' %}bg-info
-                                    {% else %}bg-secondary{% endif %}">
-                                    {{ opp.get_etapa_display }}
-                                </span>
-                            </td>
-                            <td>${{ opp.valor|floatformat:0 }}</td>
-                            <td>{{ opp.fecha_cierre_estimada|default:"-" }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% else %}
-                <p class="text-muted p-3 mb-0">Sin oportunidades asociadas.</p>
-                {% endif %}
-            </div>
+            {% if oportunidades %}
+            <table class="table-craft">
+                <thead>
+                    <tr><th>Titulo</th><th>Etapa</th><th style="text-align:right;">Valor</th><th>Cierre</th></tr>
+                </thead>
+                <tbody>
+                    {% for opp in oportunidades %}
+                    <tr>
+                        <td style="font-weight:500;">{{ opp.titulo }}</td>
+                        <td>
+                            <span class="badge-craft
+                                {% if opp.etapa == 'cerrado_ganado' %}badge-craft-success
+                                {% elif opp.etapa == 'cerrado_perdido' %}badge-craft-danger
+                                {% elif opp.etapa == 'propuesta' %}badge-craft-warning
+                                {% elif opp.etapa == 'cualificado' %}badge-craft-info
+                                {% else %}badge-craft-neutral{% endif %}">
+                                {{ opp.get_etapa_display }}
+                            </span>
+                        </td>
+                        <td style="text-align:right;font-family:var(--font-mono);font-size:0.8rem;">${{ opp.valor|floatformat:0 }}</td>
+                        <td style="color:var(--ink-tertiary);font-size:0.8rem;">{{ opp.fecha_cierre_estimada|default:"-" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">Sin oportunidades asociadas.</div>
+            {% endif %}
         </div>
 
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white">
-                <h5 class="mb-0">Historial de Actividades</h5>
+        <div class="card-craft">
+            <div class="card-header-craft">
+                <h5>Historial de Actividades</h5>
             </div>
-            <div class="card-body">
-                <form method="post" class="mb-4">
+            <div style="padding:var(--space-4);">
+                <form method="post" style="display:flex;gap:var(--space-2);margin-bottom:var(--space-4);">
                     {% csrf_token %}
-                    <div class="row g-2">
-                        <div class="col-md-2">
-                            {{ actividad_form.tipo }}
-                        </div>
-                        <div class="col-md-5">
-                            {{ actividad_form.descripcion }}
-                        </div>
-                        <div class="col-md-3">
-                            {{ actividad_form.fecha }}
-                        </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary w-100">
-                                <i class="bi bi-plus"></i> Agregar
-                            </button>
-                        </div>
-                    </div>
+                    {{ actividad_form.tipo }}
+                    {{ actividad_form.descripcion }}
+                    {{ actividad_form.fecha }}
+                    <button type="submit" class="btn-craft btn-craft-primary btn-craft-sm">
+                        <i class="bi bi-plus"></i>
+                    </button>
                 </form>
                 {% if actividades %}
-                <div class="list-group">
-                    {% for act in actividades %}
-                    <div class="list-group-item">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <i class="bi
-                                    {% if act.tipo == 'llamada' %}bi-telephone
-                                    {% elif act.tipo == 'email' %}bi-envelope
-                                    {% elif act.tipo == 'reunion' %}bi-calendar-event
-                                    {% else %}bi-journal-text{% endif %} me-2"></i>
-                                <span class="badge bg-light text-dark me-2">{{ act.get_tipo_display }}</span>
-                                {{ act.descripcion }}
-                            </div>
-                            <small class="text-muted">{{ act.fecha|date:"d M Y, H:i" }}</small>
+                {% for act in actividades %}
+                <div class="activity-item">
+                    <div style="display:flex;gap:var(--space-3);align-items:flex-start;">
+                        <div class="activity-icon">
+                            <i class="bi
+                                {% if act.tipo == 'llamada' %}bi-telephone
+                                {% elif act.tipo == 'email' %}bi-envelope
+                                {% elif act.tipo == 'reunion' %}bi-calendar-event
+                                {% else %}bi-journal-text{% endif %}"></i>
+                        </div>
+                        <div>
+                            <span class="badge-craft badge-craft-neutral" style="margin-right:var(--space-2);">{{ act.get_tipo_display }}</span>
+                            <span style="font-size:0.85rem;color:var(--ink);">{{ act.descripcion }}</span>
                         </div>
                     </div>
-                    {% endfor %}
+                    <div style="font-size:0.7rem;color:var(--ink-muted);white-space:nowrap;">{{ act.fecha|date:"d M, H:i" }}</div>
                 </div>
+                {% endfor %}
                 {% else %}
-                <p class="text-muted">Sin actividades registradas.</p>
+                <div class="empty-state">Sin actividades registradas.</div>
                 {% endif %}
             </div>
         </div>
