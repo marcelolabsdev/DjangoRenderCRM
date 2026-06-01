@@ -1,0 +1,149 @@
+{% extends "crm/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Dashboard</h2>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1">Total Contactos</p>
+                        <h3 class="mb-0">{{ total_contactos }}</h3>
+                    </div>
+                    <div class="bg-primary bg-opacity-10 rounded-3 p-3">
+                        <i class="bi bi-people-fill text-primary fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1">Contactos Activos</p>
+                        <h3 class="mb-0">{{ contactos_activos }}</h3>
+                    </div>
+                    <div class="bg-success bg-opacity-10 rounded-3 p-3">
+                        <i class="bi bi-person-check-fill text-success fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1">Valor Pipeline</p>
+                        <h3 class="mb-0">${{ valor_pipeline|floatformat:0 }}</h3>
+                    </div>
+                    <div class="bg-warning bg-opacity-10 rounded-3 p-3">
+                        <i class="bi bi-currency-dollar text-warning fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted mb-1">Ganado</p>
+                        <h3 class="mb-0">${{ ganado|floatformat:0 }}</h3>
+                    </div>
+                    <div class="bg-info bg-opacity-10 rounded-3 p-3">
+                        <i class="bi bi-trophy-fill text-info fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom">
+                <h5 class="mb-0">Oportunidades Recientes</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if oportunidades_recientes %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Titulo</th>
+                                <th>Contacto</th>
+                                <th>Etapa</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for opp in oportunidades_recientes %}
+                            <tr>
+                                <td>{{ opp.titulo }}</td>
+                                <td>{{ opp.contacto.nombre }}</td>
+                                <td>
+                                    <span class="badge
+                                        {% if opp.etapa == 'prospecto' %}bg-secondary
+                                        {% elif opp.etapa == 'cualificado' %}bg-info
+                                        {% elif opp.etapa == 'propuesta' %}bg-warning
+                                        {% elif opp.etapa == 'cerrado_ganado' %}bg-success
+                                        {% elif opp.etapa == 'cerrado_perdido' %}bg-danger
+                                        {% endif %}">
+                                        {{ opp.get_etapa_display }}
+                                    </span>
+                                </td>
+                                <td>${{ opp.valor|floatformat:0 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted p-3 mb-0">No hay oportunidades.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom">
+                <h5 class="mb-0">Actividades Recientes</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if actividades_recientes %}
+                <div class="list-group list-group-flush">
+                    {% for act in actividades_recientes %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <i class="bi
+                                    {% if act.tipo == 'llamada' %}bi-telephone
+                                    {% elif act.tipo == 'email' %}bi-envelope
+                                    {% elif act.tipo == 'reunion' %}bi-calendar-event
+                                    {% else %}bi-journal-text{% endif %} me-2"></i>
+                                <strong>{{ act.contacto.nombre }}</strong>
+                                <span class="text-muted">- {{ act.descripcion|truncatewords:8 }}</span>
+                            </div>
+                            <small class="text-muted">{{ act.fecha|date:"d M Y" }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted p-3 mb-0">No hay actividades.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

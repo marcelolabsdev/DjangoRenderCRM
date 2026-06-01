@@ -1,0 +1,84 @@
+{% extends "crm/base.html" %}
+
+{% block title %}Contactos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Contactos</h2>
+    <a href="{% url 'contacto_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Nuevo Contacto
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-2">
+            <div class="col-md-4">
+                <input type="text" name="q" class="form-control" placeholder="Buscar por nombre o email..." value="{{ buscar|default:'' }}">
+            </div>
+            <div class="col-md-3">
+                <select name="estado" class="form-select">
+                    <option value="">Todos los estados</option>
+                    <option value="activo" {% if estado_actual == 'activo' %}selected{% endif %}>Activo</option>
+                    <option value="inactivo" {% if estado_actual == 'inactivo' %}selected{% endif %}>Inactivo</option>
+                    <option value="lead" {% if estado_actual == 'lead' %}selected{% endif %}>Lead</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-primary w-100">
+                    <i class="bi bi-search"></i> Filtrar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Telefono</th>
+                    <th>Empresa</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contacto in contactos %}
+                <tr>
+                    <td><a href="{% url 'contacto_detail' contacto.pk %}">{{ contacto.nombre }}</a></td>
+                    <td>{{ contacto.email }}</td>
+                    <td>{{ contacto.telefono|default:"-" }}</td>
+                    <td>{{ contacto.empresa|default:"-" }}</td>
+                    <td>
+                        <span class="badge
+                            {% if contacto.estado == 'activo' %}bg-success
+                            {% elif contacto.estado == 'inactivo' %}bg-secondary
+                            {% else %}bg-warning text-dark{% endif %}">
+                            {{ contacto.get_estado_display }}
+                        </span>
+                    </td>
+                    <td>{{ contacto.fecha_creacion|date:"d M Y" }}</td>
+                    <td>
+                        <a href="{% url 'contacto_edit' contacto.pk %}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="{% url 'contacto_delete' contacto.pk %}" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-4">No hay contactos registrados.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

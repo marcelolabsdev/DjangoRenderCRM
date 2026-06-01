@@ -1,0 +1,133 @@
+{% extends "crm/base.html" %}
+
+{% block title %}{{ contacto.nombre }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <a href="{% url 'contacto_list' %}" class="text-muted small"><i class="bi bi-arrow-left"></i> Volver a contactos</a>
+        <h2 class="mt-1 mb-0">{{ contacto.nombre }}</h2>
+    </div>
+    <div>
+        <a href="{% url 'contacto_edit' contacto.pk %}" class="btn btn-outline-primary">
+            <i class="bi bi-pencil"></i> Editar
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Informacion</h5>
+                <hr>
+                <p><i class="bi bi-envelope me-2"></i> {{ contacto.email }}</p>
+                <p><i class="bi bi-telephone me-2"></i> {{ contacto.telefono|default:"No especificado" }}</p>
+                <p><i class="bi bi-building me-2"></i> {{ contacto.empresa|default:"Sin empresa" }}</p>
+                <p>
+                    <i class="bi bi-tag me-2"></i>
+                    <span class="badge
+                        {% if contacto.estado == 'activo' %}bg-success
+                        {% elif contacto.estado == 'inactivo' %}bg-secondary
+                        {% else %}bg-warning text-dark{% endif %}">
+                        {{ contacto.get_estado_display }}
+                    </span>
+                </p>
+                {% if contacto.notas %}
+                <hr>
+                <p class="text-muted"><i class="bi bi-journal-text me-2"></i> {{ contacto.notas }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Oportunidades</h5>
+                <a href="{% url 'oportunidad_create' %}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-plus"></i> Agregar
+                </a>
+            </div>
+            <div class="card-body p-0">
+                {% if oportunidades %}
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr><th>Titulo</th><th>Etapa</th><th>Valor</th><th>Cierre Est.</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for opp in oportunidades %}
+                        <tr>
+                            <td>{{ opp.titulo }}</td>
+                            <td>
+                                <span class="badge
+                                    {% if opp.etapa == 'cerrado_ganado' %}bg-success
+                                    {% elif opp.etapa == 'cerrado_perdido' %}bg-danger
+                                    {% elif opp.etapa == 'propuesta' %}bg-warning
+                                    {% elif opp.etapa == 'cualificado' %}bg-info
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ opp.get_etapa_display }}
+                                </span>
+                            </td>
+                            <td>${{ opp.valor|floatformat:0 }}</td>
+                            <td>{{ opp.fecha_cierre_estimada|default:"-" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-muted p-3 mb-0">Sin oportunidades asociadas.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Historial de Actividades</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" class="mb-4">
+                    {% csrf_token %}
+                    <div class="row g-2">
+                        <div class="col-md-2">
+                            {{ actividad_form.tipo }}
+                        </div>
+                        <div class="col-md-5">
+                            {{ actividad_form.descripcion }}
+                        </div>
+                        <div class="col-md-3">
+                            {{ actividad_form.fecha }}
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                {% if actividades %}
+                <div class="list-group">
+                    {% for act in actividades %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <i class="bi
+                                    {% if act.tipo == 'llamada' %}bi-telephone
+                                    {% elif act.tipo == 'email' %}bi-envelope
+                                    {% elif act.tipo == 'reunion' %}bi-calendar-event
+                                    {% else %}bi-journal-text{% endif %} me-2"></i>
+                                <span class="badge bg-light text-dark me-2">{{ act.get_tipo_display }}</span>
+                                {{ act.descripcion }}
+                            </div>
+                            <small class="text-muted">{{ act.fecha|date:"d M Y, H:i" }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">Sin actividades registradas.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

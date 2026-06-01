@@ -1,0 +1,51 @@
+{% extends "crm/base.html" %}
+
+{% block title %}Empresas{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Empresas</h2>
+    <a href="{% url 'empresa_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Nueva Empresa
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Sector</th>
+                    <th>Sitio Web</th>
+                    <th>Contactos</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for empresa in empresas %}
+                <tr>
+                    <td>{{ empresa.nombre }}</td>
+                    <td>{{ empresa.sector|default:"-" }}</td>
+                    <td>
+                        {% if empresa.sitio_web %}
+                        <a href="{{ empresa.sitio_web }}" target="_blank">{{ empresa.sitio_web }}</a>
+                        {% else %}-{% endif %}
+                    </td>
+                    <td>{{ empresa.num_contactos }}</td>
+                    <td>
+                        <a href="{% url 'empresa_edit' empresa.pk %}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-4">No hay empresas registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
